@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="it"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Iscriviti alle aste immobiliari | Correale Consulting</title>
+<meta name="description" content="Iscriviti per ricevere le aste immobiliari adatte a te a Catanzaro e provincia: indica zona, tipo di immobile e budget, ti avvisiamo noi.">
+<link rel="canonical" href="https://correale.eu/iscrizione-aste.html">
+<link rel="icon" type="image/png" href="/img/favicon.png">
+<meta property="og:title" content="Iscriviti alle aste immobiliari | Correale Consulting"><meta property="og:description" content="Iscriviti per ricevere le aste immobiliari adatte a te a Catanzaro e provincia: indica zona, tipo di immobile e budget, ti avvisiamo noi."><meta property="og:type" content="website"><meta property="og:url" content="https://correale.eu/iscrizione-aste.html"><meta property="og:image" content="https://correale.eu/img/logo-bianco.png">
+<meta name="theme-color" content="#011a42">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#011a42; --navy-dk:#0f172a; --navy-2:#0b2a5c;
+  --ink:#0f172a; --muted:#566278; --tint:#eef2f8; --line:#d7deea; --white:#fff; --wa:#25d366;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Montserrat,"Segoe UI",system-ui,sans-serif;color:var(--ink);background:var(--white);line-height:1.65}
+a{color:inherit}
+img{display:block;max-width:100%}
+.wrap{max-width:1140px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+section{padding-block:88px}
+h1,h2,h3{line-height:1.2;color:var(--navy);text-wrap:balance}
+h2{font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:600;margin-bottom:14px}
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:.78rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--navy);margin-bottom:14px}
+.eyebrow:before{content:"";width:34px;height:2px;background:currentColor}
+.lead{color:var(--muted);font-size:1.05rem;max-width:680px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;font-weight:600;font-size:.88rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:2px solid transparent;border-radius:4px;transition:.2s;cursor:pointer;font-family:inherit}
+.btn-white{background:#fff;color:var(--navy)} .btn-white:hover{background:var(--tint)}
+.btn-ghost{border-color:rgba(255,255,255,.7);color:#fff} .btn-ghost:hover{background:rgba(255,255,255,.08)}
+.btn-navy{background:var(--navy);color:#fff} .btn-navy:hover{background:var(--navy-2)}
+.btn-line{border-color:var(--navy);color:var(--navy)} .btn-line:hover{background:var(--tint)}
+:focus-visible{outline:2px solid var(--navy-2);outline-offset:3px}
+
+/* header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;height:76px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;flex:0 0 auto}
+.brand .mark{height:46px;width:auto} .brand .word{height:30px;width:auto}
+.menu{display:flex;gap:28px;list-style:none}
+.menu a{text-decoration:none;font-weight:500;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);padding-block:6px;border-bottom:2px solid transparent}
+.menu a:hover{border-color:var(--line)} .menu a.on{border-color:var(--navy)}
+@media(max-width:760px){.menu{gap:16px}.menu a{font-size:.72rem;letter-spacing:.05em}.menu .m-contatti{display:none}.brand .word{display:none}}
+
+/* hero */
+.hero{background:var(--navy-dk);color:#fff;position:relative;overflow:hidden;padding-block:96px 100px}
+.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(900px 480px at 85% 15%,rgba(30,64,130,.45),transparent 60%);pointer-events:none}
+.hero .wrap{position:relative}
+.hero .eyebrow{color:#fff}
+.hero h1{color:#fff;font-size:clamp(2.1rem,5vw,3.3rem);font-weight:600;margin-bottom:22px;max-width:760px}
+.hero h1 span{font-weight:300}
+.hero p{color:#c9d3e3;font-size:1.1rem;max-width:600px;margin-bottom:34px}
+.actions{display:flex;flex-wrap:wrap;gap:14px}
+.hero-split{display:grid;grid-template-columns:1.3fr .7fr;gap:40px;align-items:center}
+.hero-mark{justify-self:end;width:min(300px,100%);opacity:.9}
+@media(max-width:820px){.hero-split{grid-template-columns:1fr}.hero-mark{display:none}}
+.crumb{display:inline-flex;gap:8px;font-size:.82rem;color:#9fb0c9;margin-bottom:26px;text-decoration:none}
+.crumb:hover{color:#fff}
+
+/* home */
+.home-hero{text-align:center;padding-block:84px 90px}
+.home-hero .logo-big{width:min(400px,80%);margin:0 auto 34px}
+.home-hero p{margin:0 auto 0;max-width:620px}
+.doors{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:-56px;position:relative;z-index:2}
+@media(max-width:820px){.doors{grid-template-columns:1fr;margin-top:-40px}}
+.door{background:#fff;border:1.5px solid var(--navy);border-radius:4px;padding:40px 36px;display:flex;flex-direction:column;gap:16px;text-decoration:none;transition:.2s;box-shadow:0 18px 40px rgba(1,26,66,.12)}
+.door:hover{transform:translateY(-3px);box-shadow:0 24px 50px rgba(1,26,66,.18)}
+.door .ic{width:60px;height:60px;background:var(--navy);display:grid;place-items:center}
+.door h2{margin:0;font-size:1.7rem}
+.door p{color:var(--muted)}
+.door ul{list-style:none;display:grid;gap:8px;margin-bottom:6px}
+.door li{padding-left:24px;position:relative;font-size:.95rem}
+.door li:before{content:"";position:absolute;left:0;top:11px;width:12px;height:2px;background:var(--navy)}
+.door .go{margin-top:auto;font-weight:600;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:10px}
+.door:hover .go span{transform:translateX(4px)} .go span{transition:.2s}
+.home-note{padding-block:72px 84px}
+.home-note .wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+@media(max-width:820px){.home-note .wrap{grid-template-columns:1fr;gap:28px}}
+
+/* blocks */
+.tint{background:var(--tint)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:44px}
+.box{border:1.5px solid var(--navy);border-radius:4px;padding:32px 30px;background:#fff}
+.box h3{font-size:1.15rem;font-weight:600;margin-bottom:8px}
+.box p{color:var(--muted);font-size:.96rem}
+.box .ic{width:52px;height:52px;border:1.5px solid var(--navy);display:grid;place-items:center;margin-bottom:18px}
+.box ul{list-style:none;display:grid;gap:8px;margin-top:12px}
+.box li{padding-left:24px;position:relative;font-size:.95rem}
+.box li:before{content:"";position:absolute;left:0;top:11px;width:12px;height:2px;background:var(--navy)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:2px;margin-top:44px;counter-reset:s;background:var(--line);border:1px solid var(--line)}
+.step{background:#fff;padding:30px 26px}
+.step:before{counter-increment:s;content:counter(s,decimal-leading-zero);display:block;font-size:2.2rem;font-weight:300;color:var(--navy);margin-bottom:10px}
+.step h3{font-size:1rem;font-weight:600;margin-bottom:6px}
+.step p{color:var(--muted);font-size:.92rem}
+.why{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+@media(max-width:860px){.why{grid-template-columns:1fr;gap:34px}}
+.why-list{display:grid;gap:22px}
+.why-item{display:flex;gap:18px}
+.why-item .n{flex:0 0 44px;height:44px;background:var(--navy);color:#fff;display:grid;place-items:center}
+.why-item h3{font-size:1.02rem;font-weight:600}
+.why-item p{color:var(--muted);font-size:.94rem}
+.faq{max-width:840px;margin-top:36px;border-top:1.5px solid var(--navy)}
+details{border-bottom:1px solid var(--line);padding-block:20px}
+summary{cursor:pointer;font-weight:600;color:var(--navy);list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";font-size:1.5rem;font-weight:300;line-height:1}
+details[open] summary:after{content:"–"}
+details p{color:var(--muted);margin-top:10px}
+.switch{border-top:1px solid var(--line);padding-block:44px}
+.switch .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px}
+.switch p{color:var(--muted)} .switch b{color:var(--navy);display:block;font-size:1.1rem}
+
+/* contact */
+.contact{background:var(--navy);color:#fff}
+.contact h2,.contact .eyebrow{color:#fff}
+.contact .lead{color:#c9d3e3}
+.contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:50px;margin-top:42px}
+@media(max-width:860px){.contact-grid{grid-template-columns:1fr}}
+.info{display:grid;gap:14px;align-content:start}
+.info a{text-decoration:none}
+.info-row{display:flex;gap:16px;align-items:center;border:1px solid rgba(255,255,255,.22);padding:18px 20px;border-radius:4px;transition:.2s;min-width:0}
+a.info-row:hover{background:rgba(255,255,255,.06)}
+.info-row small{display:block;color:#9fb0c9;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase}
+.info-row span{font-weight:500;overflow-wrap:anywhere}
+form{background:#fff;color:var(--ink);padding:32px;border-radius:4px;display:grid;gap:15px;min-width:0}
+label{font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--navy)}
+input,select,textarea{width:100%;font:inherit;font-size:.95rem;letter-spacing:0;text-transform:none;padding:12px 14px;border:1px solid var(--line);border-radius:3px;margin-top:6px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--navy);outline-offset:-1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+@media(max-width:560px){.row2{grid-template-columns:1fr}form{padding:24px}}
+.privacy{font-size:.8rem;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
+.privacy input{width:auto;margin-top:3px}
+.hidden{display:none}
+
+footer{background:var(--navy-dk);color:#9fb0c9;font-size:.85rem;padding-block:48px 30px}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px}
+.foot img{width:170px}
+.foot nav{display:flex;flex-wrap:wrap;gap:22px}
+.foot nav a{text-decoration:none;color:#fff;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:30px;padding-top:20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+.wa-float{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;background:var(--wa);display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:60}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:#fff}
+  .menu .m-riservata a{display:inline-flex;align-items:center;gap:6px;background:#011a42;color:#fff!important;border-radius:999px;padding:8px 14px;font-weight:600;white-space:nowrap}.menu .m-riservata a:hover{opacity:.9}@media(max-width:760px){.menu .m-riservata a{padding:6px 9px;font-size:12.5px;gap:4px}.menu .m-riservata svg{width:12px;height:12px}}
+.scelte{border:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 15px}.scelte legend{font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:8px}.scelte label{font-size:.9rem;font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink);display:flex;gap:9px;align-items:center}.scelte input{width:auto;margin:0}.esito{font-size:.88rem;color:var(--navy);background:var(--tint);padding:12px 14px;border-radius:3px}@media(max-width:420px){.scelte{grid-template-columns:1fr}}
+</style>
+</head><body>
+<header>
+  <div class="wrap nav">
+    <a href="/" class="brand" aria-label="Correale Consulting – pagina iniziale">
+      <img class="mark" src="img/marchio-blu.png" alt="">
+      <img class="word" src="img/scritta-blu.png" alt="Correale Consulting">
+    </a>
+    <ul class="menu">
+      <li><a class='on' href='/aste'>Aste immobiliari</a></li>
+      <li><a href='/luce-gas'>Luce &amp; Gas</a></li>
+      <li class="m-contatti"><a href="#modulo-iscrizione">Iscrizione</a></li>
+          <li class="m-riservata"><a href="https://aste.correale.eu" rel="nofollow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Area riservata</a></li>
+    </ul>
+  </div>
+</header>
+<main><section class="hero">
+  <div class="wrap hero-split">
+    <div>
+      <a class="crumb" href="/aste">← Aste immobiliari</a>
+      <span class="eyebrow">Iscrizione</span>
+      <h1>Ricevi le aste <span>adatte a te.</span></h1>
+      <p>Dicci cosa cerchi: zona, tipo di immobile e budget. Quando esce un'asta in linea con le tue richieste ti avvisiamo noi, con una prima valutazione.</p>
+      <div class="actions"><a href="#modulo-iscrizione" class="btn btn-white">Compila l'iscrizione</a><a href="https://wa.me/393407317004" class="btn btn-ghost" target="_blank" rel="noopener">Scrivici su WhatsApp</a></div>
+    </div>
+    <img class="hero-mark" src="img/marchio-bianco.png" alt="">
+  </div>
+</section>
+<section class="tint">
+  <div class="wrap">
+    <span class="eyebrow">Come funziona</span>
+    <h2>Tre passaggi, nessun impegno</h2>
+    <div class="steps">
+      <div class="step"><h3>Ti iscrivi</h3><p>Compili il modulo qui sotto in un paio di minuti.</p></div>
+      <div class="step"><h3>Ti avvisiamo</h3><p>Controlliamo le nuove aste e ti segnaliamo quelle in linea con le tue richieste.</p></div>
+      <div class="step"><h3>Valutiamo insieme</h3><p>Se un immobile ti interessa fissiamo il primo incontro, gratuito.</p></div>
+    </div>
+  </div>
+</section>
+<section class="contact" id="modulo-iscrizione">
+  <div class="wrap">
+    <span class="eyebrow">Modulo di iscrizione</span>
+    <h2>Cosa stai cercando?</h2>
+    <p class="lead">Premendo "Invia iscrizione" si apre WhatsApp con il messaggio già pronto: devi solo inviarlo.</p>
+    <div class="contact-grid">
+      <div class="info">
+        <a href="https://wa.me/393407317004" target="_blank" rel="noopener" class="info-row"><svg width="26" height="26" viewBox="0 0 24 24" fill="#25d366"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg><div><small>WhatsApp</small><span>340 731 7004</span></div></a>
+        <a href="tel:+393407317004" class="info-row"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><div><small>Telefono</small><span>340 731 7004</span></div></a>
+        <a href="mailto:consulting@correale.eu" class="info-row"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 7 9 6 9-6"/></svg><div><small>Email</small><span>consulting@correale.eu</span></div></a>
+      </div>
+      <form id="form-iscrizione" data-whatsapp data-titolo="Iscrizione aste dal sito correale.eu">
+        <div class="row2">
+          <label for="isc-nome">Nome e cognome<input id="isc-nome" name="nome" required autocomplete="name" data-etichetta="Nome"></label>
+          <label for="isc-tel">Telefono<input id="isc-tel" name="telefono" type="tel" required autocomplete="tel" data-etichetta="Telefono"></label>
+        </div>
+        <label for="isc-email">Email<input id="isc-email" name="email" type="email" autocomplete="email" data-etichetta="Email"></label>
+        <label for="isc-zona">Zona o comuni di interesse<input id="isc-zona" name="zona" required placeholder="Es. Catanzaro, Lido, Soverato…" data-etichetta="Zona"></label>
+        <fieldset class="scelte" data-gruppo data-etichetta="Tipo di immobile">
+          <legend>Tipo di immobile</legend>
+          <label><input type="checkbox" value="Appartamento"> Appartamento</label>
+          <label><input type="checkbox" value="Villa / casa indipendente"> Villa / casa indip.</label>
+          <label><input type="checkbox" value="Locale commerciale"> Locale commerciale</label>
+          <label><input type="checkbox" value="Box / garage"> Box / garage</label>
+          <label><input type="checkbox" value="Terreno"> Terreno</label>
+          <label><input type="checkbox" value="Altro"> Altro</label>
+        </fieldset>
+        <div class="row2">
+          <label for="isc-budget">Budget massimo<select id="isc-budget" name="budget" data-etichetta="Budget">
+            <option value="">Seleziona…</option>
+            <option>Fino a 50.000 €</option>
+            <option>50.000 – 100.000 €</option>
+            <option>100.000 – 150.000 €</option>
+            <option>150.000 – 250.000 €</option>
+            <option>Oltre 250.000 €</option>
+          </select></label>
+          <label for="isc-mutuo">Mutuo<select id="isc-mutuo" name="mutuo" data-etichetta="Mutuo">
+            <option value="">Seleziona…</option>
+            <option>Sì, mi serve un mutuo</option>
+            <option>No, acquisto senza mutuo</option>
+            <option>Da valutare</option>
+          </select></label>
+        </div>
+        <label for="isc-note">Note<textarea id="isc-note" name="note" rows="3" placeholder="Metri quadri, numero di camere, uso (abitazione o investimento)…" data-etichetta="Note"></textarea></label>
+        <label class="privacy"><input type="checkbox" name="privacy" required> Ho letto l'<a href='/privacy' rel='noopener' target='_blank'>informativa privacy</a> e acconsento al trattamento dei dati per essere ricontattato.</label>
+        <button class="btn btn-navy" type="submit">Invia iscrizione</button>
+        <p class="esito" hidden>Si è aperto WhatsApp con il messaggio pronto: premi invia per completare l'iscrizione. Se non si apre, scrivici al 340 731 7004.</p>
+      </form>
+    </div>
+  </div>
+</section>
+<div class="switch"><div class="wrap"><p><b>Vuoi saperne di più su come lavoriamo?</b>Ricerca, analisi, asta e pratiche successive.</p><a class='btn btn-line' href='/aste'>Torna alle Aste immobiliari</a></div></div></main>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <img src="img/logo-bianco.png" alt="Correale Consulting">
+      <nav><a href='/aste'>Aste immobiliari</a><a href='/luce-gas'>Luce &amp; Gas</a></nav>
+      <div>Catanzaro (CZ)<br>340 731 7004 · consulting@correale.eu</div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Correale Consulting · <a href='/privacy' style='color:#fff'>Informativa privacy</a></span>
+      <span>Consulenza aste immobiliari · Consulenza luce e gas</span>
+    </div>
+  </div>
+</footer>
+<a href="https://wa.me/393407317004" class="wa-float" target="_blank" rel="noopener" aria-label="Scrivici su WhatsApp"><svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg></a>
+<script src="moduli.js" defer></script>
+</body></html>
