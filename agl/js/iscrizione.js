@@ -1,11 +1,11 @@
 /* Iscrizione AGL: compilazione, anteprima, firma (disegnata o scritta), invio e pagamento. */
 (function () {
   'use strict';
-  var IMPORTO = '409,84';
+  var NETTO = '409,84', NETTO_PROMO = '327,87', TOT = 500, TOT_PROMO = 400, WORKER = 'https://iscrizioni-correale.agl-correale.workers.dev';
   var $ = function (id) { return document.getElementById(id); };
   var steps = [$('step1'), $('step2'), $('step3'), $('step4')];
   var prog = $('progress').children;
-  var S = { data: null, method: 'draw', hasInk: false, previewUrl: null, finalUrl: null, busy: false };
+  var S = { data: null, promo: false, coupon: '', pending: null, sentId: null, method: 'draw', hasInk: false, previewUrl: null, finalUrl: null, busy: false };
   var assets = {};
 
   function show(n) {
@@ -47,7 +47,7 @@
       cf: cap($('cf').value).toUpperCase().replace(/\s/g, ''), cell: cap($('cell').value), email: cap($('email').value).toLowerCase(),
       tipologia: tip, note: cap($('note').value), geo: cap($('geo').value),
       budget: cap($('budget').value), liquidita: cap($('liq').value), mutuo: mu ? mu.value : null,
-      importo: IMPORTO, luogo: 'Catanzaro', data: todayIt(), consensi: {}, clausole: false
+      importo: S.promo ? NETTO_PROMO : NETTO, luogo: 'Catanzaro', data: todayIt(), consensi: {}, clausole: false
     };
   }
   function validate1(d) {
@@ -83,7 +83,7 @@
   }
   function summary(d) {
     var rows = [['Nome', d.nome], ['Nato/a', d.natoA + ' il ' + d.natoIl], ['Residente', d.residenteIn + ' (' + d.prov + '), ' + d.via + ' ' + d.civico],
-      ['Codice fiscale', d.cf], ['Cellulare', d.cell], ['Email', d.email], ['Corrispettivo', '€ ' + d.importo + ' + IVA (€ 500,00 IVA inclusa)']];
+      ['Codice fiscale', d.cf], ['Cellulare', d.cell], ['Email', d.email], ['Corrispettivo', '€ ' + d.importo + ' + IVA (€ ' + (S.promo ? '400,00' : '500,00') + ' IVA inclusa)' + (S.promo ? ' · promo EXPO2026' : '')]];
     var dl = $('sum'); dl.innerHTML = '';
     rows.forEach(function (r) { var a = document.createElement('dt'); a.textContent = r[0]; var b = document.createElement('dd'); b.textContent = r[1]; dl.appendChild(a); dl.appendChild(b); });
   }
@@ -91,9 +91,30 @@
   $('f1').addEventListener('submit', async function (e) {
     e.preventDefault();
     var d = collect(), m = validate1(d); err('e1', m); if (m) return;
-    S.data = d; summary(d);
+    await applicaCoupon();
+    d = collect(); S.data = d; summary(d); aggiornaImporto();
     try { show(1); await makePreview(); } catch (x) { err('eg', 'Non riesco a preparare l\'anteprima del contratto. Riprova tra poco.'); console.error(x); }
   });
+  /* ---------- coupon ---------- */
+  async function applicaCoupon() {
+    var c = cap($('coupon').value).toUpperCase(), msg = $('cpMsg'); S.promo = false; S.coupon = '';
+    if (!c) { msg.textContent = ''; return; }
+    var ok = null;
+    try {
+      var ctl = new AbortController(), t = setTimeout(function () { ctl.abort(); }, 4000);
+      var r = await fetch(WORKER + '/coupon?c=' + encodeURIComponent(c), { signal: ctl.signal, cache: 'no-store' }); clearTimeout(t);
+      if (r.ok) ok = !!(await r.json()).valido;
+    } catch (e) { /* senza linea: decide il server all'invio */ }
+    if (ok === null) ok = (c === 'EXPO2026');
+    S.coupon = c; S.promo = ok;
+    msg.textContent = ok ? 'Codice valido: corrispettivo scontato a 400 € (IVA inclusa), da pagare di persona.' : 'Codice non valido: si applica il prezzo di listino.';
+    msg.style.color = ok ? '#1e5a31' : '#b3261e';
+  }
+  function aggiornaImporto() {
+    var el = $('amt');
+    el.innerHTML = S.promo ? '<b>Corrispettivo di sviluppo (promo EXPO2026):</b> € ' + NETTO_PROMO + ' + IVA (€ 400,00 IVA inclusa). Il contratto indica l\'importo al netto dell\'IVA.'
+      : '<b>Corrispettivo di sviluppo:</b> € ' + NETTO + ' + IVA (€ 500,00 IVA inclusa). Il contratto indica l\'importo al netto dell\'IVA.';
+  }
   $('back2').onclick = function () { show(0); };
   $('go3').onclick = function () { show(2); setTimeout(resizePad, 50); };
   $('back3').onclick = function () { show(1); };
@@ -159,6 +180,92 @@
     return new Promise(function (res) { c.toBlob(function (b) { b.arrayBuffer().then(function (ab) { res(new Uint8Array(ab)); }); }, 'image/png'); });
   }
 
+  /* ---------- coda sul dispositivo (IndexedDB) e reinvio ---------- */
+  var mem = [];
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return 'ctr-' + crypto.randomUUID();
+    return 'ctr-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+  }
+  function idb() {
+    return new Promise(function (res, rej) {
+      if (!window.indexedDB) return rej(new Error('no idb'));
+      var q = indexedDB.open('contratti-agl', 1);
+      q.onupgradeneeded = function () { q.result.createObjectStore('coda', { keyPath: 'id' }); };
+      q.onsuccess = function () { res(q.result); }; q.onerror = function () { rej(q.error); };
+    });
+  }
+  async function idbPut(rec) {
+    mem = mem.filter(function (x) { return x.id !== rec.id; }); mem.push(rec);
+    try { var db = await idb(); await new Promise(function (res, rej) { var t = db.transaction('coda', 'readwrite'); t.objectStore('coda').put(rec); t.oncomplete = res; t.onerror = function () { rej(t.error); }; }); } catch (e) { /* resta almeno in memoria */ }
+  }
+  async function idbAll() {
+    try { var db = await idb(); var l = await new Promise(function (res, rej) { var r = db.transaction('coda').objectStore('coda').getAll(); r.onsuccess = function () { res(r.result); }; r.onerror = function () { rej(r.error); }; });
+      var ids = {}; l.forEach(function (x) { ids[x.id] = 1; }); mem.forEach(function (x) { if (!ids[x.id]) l.push(x); }); return l; } catch (e) { return mem.slice(); }
+  }
+  async function idbDel(id) {
+    mem = mem.filter(function (x) { return x.id !== id; });
+    try { var db = await idb(); await new Promise(function (res, rej) { var t = db.transaction('coda', 'readwrite'); t.objectStore('coda').delete(id); t.oncomplete = res; t.onerror = function () { rej(t.error); }; }); } catch (e) { /* niente */ }
+  }
+  async function spedisci(rec) {
+    var fd = new FormData();
+    rec.campi.forEach(function (kv) { fd.append(kv[0], kv[1]); });
+    if (rec.scelta) fd.append('pagamento', rec.scelta);
+    fd.append('contratto', new File([rec.pdf], rec.fname, { type: 'application/pdf' }), rec.fname);
+    var ctl = new AbortController(), t = setTimeout(function () { ctl.abort(); }, 25000);
+    try {
+      var r = await fetch(WORKER + '/invio', { method: 'POST', body: fd, headers: { Accept: 'application/json' }, signal: ctl.signal });
+      if (!r.ok) return null; var j = await r.json(); return j && j.ok ? j.id : null;
+    } catch (e) { return null; } finally { clearTimeout(t); }
+  }
+  var inviando = false;
+  async function inviaCoda() {
+    if (inviando) return; inviando = true;
+    try {
+      var l = await idbAll();
+      for (var i = 0; i < l.length; i++) {
+        var id = await spedisci(l[i]);
+        if (id) { await idbDel(l[i].id); if (S.pending && S.pending.id === l[i].id) { S.sentId = id; S.pending = null; statoInvio(); } }
+      }
+    } finally { inviando = false; }
+  }
+  function statoInvio() {
+    var b = $('pendbox'); if (!b) return;
+    if (S.pending) { b.classList.remove('hide'); b.innerHTML = '<b>Contratto salvato su questo dispositivo, invio in corso.</b> Se manca la connessione lo invieremo da soli appena torna: tieni aperta questa pagina e scarica la copia del contratto qui sopra.'; }
+    else if (S.sentId) { b.classList.remove('hide'); b.style.cssText = 'background:#e9f3ec;border-color:#b9d9c3;color:#1e5a31'; b.innerHTML = '<b>Contratto registrato.</b> Lo abbiamo ricevuto e archiviato.'; }
+    else b.classList.add('hide');
+  }
+  async function scegliPagamento(scelta) {
+    if (S.pending) { S.pending.scelta = scelta; await idbPut(S.pending); inviaCoda(); return; }
+    if (S.sentId) { try { await fetch(WORKER + '/scelta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: S.sentId, scelta: scelta }) }); } catch (e) { /* non bloccante */ } }
+  }
+  function card(tag, cls, html, onClick, href) {
+    var el = document.createElement(tag); el.className = cls; el.innerHTML = html;
+    if (href) { el.href = href; el.target = '_blank'; el.rel = 'noopener'; }
+    if (onClick) el.addEventListener('click', onClick); return el;
+  }
+  function renderPay() {
+    var box = $('payBox'); box.innerHTML = '';
+    if (S.promo) {
+      $('paySub').textContent = 'Promozione EXPO2026: il corrispettivo è di 400 € (IVA inclusa), da pagare di persona.';
+      box.appendChild(card('div', 'card2 sel full', '<span>Promozione EXPO2026 · pagamento di persona</span><b>400 €</b><span>Importo totale, IVA inclusa. Il pagamento si effettua di persona.</span>'));
+      $('payNote').textContent = 'Con la promozione non è previsto il pagamento in due rate né online.';
+      S.pending ? (S.pending.scelta = 'stand') : scegliPagamento('stand');
+    } else {
+      $('paySub').textContent = 'Scegli come pagare il corrispettivo di sviluppo (IVA inclusa). Online il pagamento avviene sul sito sicuro SumUp; puoi anche pagare di persona.';
+      box.appendChild(card('a', 'card2', '<span>In 2 rate</span><b>Paga 250 €</b><span>Prima rata. I restanti 250 € dopo la Scheda di Fattibilità (totale 500 €).</span>', function () { scegliPagamento('rate'); }, 'https://pay.sumup.com/b2c/Q55VOKE9'));
+      box.appendChild(card('a', 'card2', '<span>In un\'unica soluzione</span><b>Paga 500 €</b><span>Importo totale, IVA inclusa.</span>', function () { scegliPagamento('unico'); }, 'https://pay.sumup.com/b2c/QQAHI381'));
+      box.appendChild(card('button', 'card2 full', '<span>Preferisco pagare di persona</span><b>500 €</b><span>Paghi in sede o allo stand. Importo totale, IVA inclusa.</span>', function (e) {
+        scegliPagamento('stand'); $('payNote').textContent = 'Perfetto: abbiamo segnato che pagherai di persona 500 € (IVA inclusa). Ti aspettiamo.';
+        [].forEach.call(box.children, function (x) { x.classList.remove('sel'); }); e.currentTarget.classList.add('sel');
+      }));
+      box.lastChild.type = 'button';
+      $('payNote').textContent = '';
+    }
+  }
+  window.addEventListener('online', inviaCoda);
+  setInterval(inviaCoda, 20000);
+  setTimeout(inviaCoda, 1500);
+
   /* ---------- invio ---------- */
   function nowIt() { return new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome', dateStyle: 'short', timeStyle: 'medium' }) + ' (ora italiana)'; }
   async function getServerInfo() {
@@ -199,22 +306,26 @@
       var safe = (d.nome || 'cliente').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '');
       var fname = 'Contratto-AGL-' + safe + '-' + d.data.split('/').reverse().join('') + '.pdf';
       var file = new File([bytes], fname, { type: 'application/pdf' });
-      var fd = new FormData();
-      fd.append('form-name', 'iscrizione-aste-firma'); fd.append('bot-field', '');
-      fd.append('nome', d.nome); fd.append('email', d.email); fd.append('cell', d.cell); fd.append('cf', d.cf);
-      fd.append('importo', d.importo + ' + IVA'); fd.append('metodo_firma', metodo); fd.append('data_ora', ts); fd.append('ip', ip);
-      fd.append('impronta', hash);
-      fd.append('consensi', 'marketing: ' + c.marketing + ' | partner: ' + c.partner + ' | terzi: ' + c.terzi);
-      fd.append('contratto', file, fname);
-      var r = await fetch('https://iscrizioni-correale.agl-correale.workers.dev/invio', { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
-      if (!r.ok) throw new Error('invio ' + r.status);
+      var campi = [
+        ['form-name', 'iscrizione-aste-firma'], ['bot-field', ''], ['client_id', uuid()],
+        ['nome', d.nome], ['email', d.email], ['cell', d.cell], ['cf', d.cf],
+        ['importo', d.importo + ' + IVA'], ['coupon', S.coupon], ['metodo_firma', metodo], ['data_ora', ts], ['ip', ip],
+        ['impronta', hash],
+        ['consensi', 'marketing: ' + c.marketing + ' | partner: ' + c.partner + ' | terzi: ' + c.terzi]
+      ];
       if (S.finalUrl) URL.revokeObjectURL(S.finalUrl);
       S.finalUrl = URL.createObjectURL(file);
       var a = $('dl'); a.href = S.finalUrl; a.download = fname;
-      show(3);
+      // 1) il contratto firmato resta prima di tutto sul dispositivo
+      var rec = { id: campi[2][1], campi: campi, fname: fname, pdf: bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength), scelta: '' };
+      await idbPut(rec);
+      S.pending = rec; S.sentId = null;
+      renderPay(); show(3); statoInvio();
+      // 2) poi lo mando al server (se manca la linea ci riprova da solo)
+      inviaCoda();
     } catch (x) {
       console.error(x);
-      err('e3', 'Non sono riuscito a registrare la firma. Controlla la connessione e riprova; se il problema continua scrivici su WhatsApp al 340 731 7004.');
+      err('e3', 'Non sono riuscito a preparare il contratto firmato. Riprova; se il problema continua scrivici su WhatsApp al 340 731 7004.');
     } finally { S.busy = false; btn.disabled = false; btn.textContent = 'Firma e conferma'; }
   };
 
