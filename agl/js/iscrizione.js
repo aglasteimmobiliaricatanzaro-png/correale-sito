@@ -115,6 +115,7 @@
     el.innerHTML = S.promo ? '<b>Corrispettivo di sviluppo (promo EXPO2026):</b> € ' + NETTO_PROMO + ' + IVA (€ 400,00 IVA inclusa). Il contratto indica l\'importo al netto dell\'IVA.'
       : '<b>Corrispettivo di sviluppo:</b> € ' + NETTO + ' + IVA (€ 500,00 IVA inclusa). Il contratto indica l\'importo al netto dell\'IVA.';
   }
+  var cpT; $('coupon').addEventListener('input', function () { clearTimeout(cpT); cpT = setTimeout(async function () { await applicaCoupon(); aggiornaImporto(); }, 500); });
   $('back2').onclick = function () { show(0); };
   $('go3').onclick = function () { show(2); setTimeout(resizePad, 50); };
   $('back3').onclick = function () { show(1); };
