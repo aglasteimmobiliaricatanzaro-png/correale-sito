@@ -72,7 +72,7 @@
       ? '<b>Grazie ' + esc(d.nome) + '!</b> Abbiamo registrato i tuoi dati.'
       : '<b>Dati salvati.</b> Li invieremo appena torna la connessione: non vanno persi.';
     var a = $('okAct'); a.innerHTML = '';
-    if (d.msg) {
+    {
       var w = document.createElement('a'); w.className = 'btn btn-wa'; w.target = '_blank'; w.rel = 'noopener';
       w.href = waLink(d); w.textContent = 'Invia il messaggio WhatsApp al cliente'; a.appendChild(w);
     }
