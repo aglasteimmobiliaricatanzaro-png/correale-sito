@@ -244,6 +244,16 @@
     if (href) { el.href = href; el.target = '_blank'; el.rel = 'noopener'; }
     if (onClick) el.addEventListener('click', onClick); return el;
   }
+  function addWa() {
+    var row = $('dl').parentNode, d = S.data || {};
+    if (!d.cell || $('waCli')) return;
+    var n = String(d.cell).replace(/\D/g, '').replace(/^00/, '');
+    if (!/^39/.test(n) || n.length < 11) n = '39' + n.replace(/^0+/, '');
+    var t = 'Buongiorno ' + (d.nome || '') + ', grazie per aver firmato il contratto con AGL Aste Immobiliari Catanzaro. Per qualsiasi domanda siamo a disposizione.';
+    var a = document.createElement('a'); a.id = 'waCli'; a.className = 'btn btn-agl-line'; a.target = '_blank'; a.rel = 'noopener';
+    a.style.marginLeft = '8px'; a.href = 'https://wa.me/' + n + '?text=' + encodeURIComponent(t); a.textContent = 'Invia WhatsApp al cliente';
+    row.appendChild(a);
+  }
   function renderPay() {
     var box = $('payBox'); box.innerHTML = '';
     if (S.promo) {
@@ -321,7 +331,7 @@
       var rec = { id: campi[2][1], campi: campi, fname: fname, pdf: bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength), scelta: '' };
       await idbPut(rec);
       S.pending = rec; S.sentId = null;
-      renderPay(); show(3); statoInvio();
+      renderPay(); addWa(); show(3); statoInvio();
       // 2) poi lo mando al server (se manca la linea ci riprova da solo)
       inviaCoda();
     } catch (x) {
