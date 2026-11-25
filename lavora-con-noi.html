@@ -171,6 +171,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .apply-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:50px;margin-top:42px}
 @media(max-width:860px){.apply-grid{grid-template-columns:1fr}}
 .thanks{background:#e9f9ef;border:1px solid #9fdcb5;color:#14532d;padding:14px 16px;border-radius:4px;font-size:.92rem}
+.agent{margin-top:28px;background:#fff;border:1.5px dashed #1e4082;border-radius:6px;display:grid;grid-template-columns:.9fr 1.1fr;overflow:hidden;scroll-margin-top:96px}
+@media(max-width:860px){.agent{grid-template-columns:1fr}}
+.agent .job-top{display:flex;flex-direction:column;justify-content:center}
+.agent .job-body{grid-template-columns:1fr 1fr;align-content:start}
+@media(max-width:560px){.agent .job-body{grid-template-columns:1fr}}
+.agent .job-body p{grid-column:1/-1;color:var(--muted);font-size:.95rem}
+.agent .job-body .btn{grid-column:1/-1}
 .menu .m-lavora a.on{border-color:var(--navy)}
 @media(max-width:760px){.menu .m-lavora{display:none}}
 </style>
@@ -194,7 +201,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <div class="wrap hero-split">
     <div>
       <span class="pill"><i></i>Posizioni aperte · Catanzaro</span>
-      <h1>Lavora con noi <span>Cerchiamo due nuove persone per far crescere la squadra</span></h1>
+      <h1>Lavora con noi <span>Stiamo facendo crescere la squadra</span></h1>
       <p>Correale Consulting segue famiglie e imprese nell'acquisto di case all'asta e nella scelta delle forniture luce e gas. Se ti piace lavorare con le persone, questo può essere il tuo posto.</p>
       <div class="actions"><a href="#candidati" class="btn btn-white">Candidati ora</a><a href="#posizioni" class="btn btn-ghost">Vedi le posizioni</a></div>
     </div>
@@ -233,6 +240,21 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       </div>
     </article>
   </div>
+  <article class="agent" id="agente">
+    <div class="job-top">
+      <small>Nuovo progetto · Sondaggio di interesse</small>
+      <h2>Agente Immobiliare</h2>
+      <span class="tag" style="align-self:flex-start">Anche freelance · Catanzaro</span>
+    </div>
+    <div class="job-body">
+      <p>Stiamo valutando un nuovo progetto nel settore immobiliare, in sinergia con l'attività sulle aste. È ancora in fase di definizione: per ora vorremmo semplicemente conoscere agenti interessati, per un incontro conoscitivo senza alcun impegno.</p>
+      <div><h3>Chi vorremmo conoscere</h3>
+        <ul><li>Agenti immobiliari, anche freelance</li><li>Abilitazione da agente (o in corso)</li><li>Conoscenza del mercato locale</li><li>Spirito imprenditoriale</li></ul></div>
+      <div><h3>Il primo passo</h3>
+        <ul><li>Un incontro conoscitivo</li><li>Nessun impegno da parte tua</li><li>Ascoltiamo idee e aspettative</li><li>Collaborazione da definire insieme</li></ul></div>
+      <a href="#candidati" class="btn btn-navy" data-pos="Agente Immobiliare (manifestazione di interesse)">Lasciaci un contatto</a>
+    </div>
+  </article>
 </div>
 
 <section>
@@ -283,6 +305,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
           <select id="lav-pos" name="posizione" required>
             <option value="Addetto/a Segreteria">Addetto/a Segreteria</option>
             <option value="Consulente Commerciale">Consulente Commerciale</option>
+            <option value="Agente Immobiliare (manifestazione di interesse)">Agente Immobiliare (nuovo progetto)</option>
             <option value="Candidatura spontanea">Candidatura spontanea</option>
           </select></label>
         <div class="row2">
@@ -328,6 +351,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   var h=location.hash;
   if(h==='#consulente')pick('Consulente Commerciale');
   if(h==='#segreteria')pick('Addetto/a Segreteria');
+  if(h==='#agente')pick('Agente Immobiliare (manifestazione di interesse)');
 })();
 </script>
 </body></html>
