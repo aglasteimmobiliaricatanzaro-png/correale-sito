@@ -47,7 +47,7 @@
       cf: cap($('cf').value).toUpperCase().replace(/\s/g, ''), cell: cap($('cell').value), email: cap($('email').value).toLowerCase(),
       tipologia: tip, note: cap($('note').value), geo: cap($('geo').value),
       budget: cap($('budget').value), liquidita: cap($('liq').value), mutuo: mu ? mu.value : null,
-      importo: S.promo ? NETTO_PROMO : NETTO, luogo: 'Catanzaro', data: todayIt(), consensi: {}, clausole: false
+      importo: S.free ? '0,00' : S.promo ? NETTO_PROMO : NETTO, luogo: 'Catanzaro', data: todayIt(), consensi: {}, clausole: false
     };
   }
   function validate1(d) {
@@ -83,7 +83,7 @@
   }
   function summary(d) {
     var rows = [['Nome', d.nome], ['Nato/a', d.natoA + ' il ' + d.natoIl], ['Residente', d.residenteIn + ' (' + d.prov + '), ' + d.via + ' ' + d.civico],
-      ['Codice fiscale', d.cf], ['Cellulare', d.cell], ['Email', d.email], ['Corrispettivo', '€ ' + d.importo + ' + IVA (€ ' + (S.promo ? '400,00' : '500,00') + ' IVA inclusa)' + (S.promo ? ' · promo EXPO2026' : '')]];
+      ['Codice fiscale', d.cf], ['Cellulare', d.cell], ['Email', d.email], ['Corrispettivo', S.free ? '€ 0,00' : '€ ' + d.importo + ' + IVA (€ ' + (S.promo ? '400,00' : '500,00') + ' IVA inclusa)' + (S.promo ? ' · promo EXPO2026' : '')]];
     var dl = $('sum'); dl.innerHTML = '';
     rows.forEach(function (r) { var a = document.createElement('dt'); a.textContent = r[0]; var b = document.createElement('dd'); b.textContent = r[1]; dl.appendChild(a); dl.appendChild(b); });
   }
@@ -103,16 +103,16 @@
     try {
       var ctl = new AbortController(), t = setTimeout(function () { ctl.abort(); }, 4000);
       var r = await fetch(WORKER + '/coupon?c=' + encodeURIComponent(c), { signal: ctl.signal, cache: 'no-store' }); clearTimeout(t);
-      if (r.ok) ok = !!(await r.json()).valido;
+      if (r.ok) { var jj = await r.json(); ok = !!jj.valido; S.free = !!(ok && Number(jj.totale) === 0); }
     } catch (e) { /* senza linea: decide il server all'invio */ }
-    if (ok === null) ok = (c === 'EXPO2026');
-    S.coupon = c; S.promo = ok;
-    msg.textContent = ok ? 'Codice valido: corrispettivo scontato a 400 € (IVA inclusa), da pagare di persona.' : 'Codice non valido: si applica il prezzo di listino.';
+    if (ok === null) { ok = (c === 'EXPO2026'); S.free = false; }
+    S.coupon = c; S.promo = ok; if (!ok) S.free = false;
+    msg.textContent = ok ? (S.free ? 'Codice valido.' : 'Codice valido: corrispettivo scontato a 400 € (IVA inclusa), da pagare di persona.') : 'Codice non valido: si applica il prezzo di listino.';
     msg.style.color = ok ? '#1e5a31' : '#b3261e';
   }
   function aggiornaImporto() {
     var el = $('amt');
-    el.innerHTML = S.promo ? '<b>Corrispettivo di sviluppo (promo EXPO2026):</b> € ' + NETTO_PROMO + ' + IVA (€ 400,00 IVA inclusa). Il contratto indica l\'importo al netto dell\'IVA.'
+    el.innerHTML = S.free ? '<b>Corrispettivo di sviluppo:</b> € 0,00' : S.promo ? '<b>Corrispettivo di sviluppo (promo EXPO2026):</b> € ' + NETTO_PROMO + ' + IVA (€ 400,00 IVA inclusa). Il contratto indica l\'importo al netto dell\'IVA.'
       : '<b>Corrispettivo di sviluppo:</b> € ' + NETTO + ' + IVA (€ 500,00 IVA inclusa). Il contratto indica l\'importo al netto dell\'IVA.';
   }
   var cpT; $('coupon').addEventListener('input', function () { clearTimeout(cpT); cpT = setTimeout(async function () { await applicaCoupon(); aggiornaImporto(); }, 500); });
@@ -257,9 +257,9 @@
   function renderPay() {
     var box = $('payBox'); box.innerHTML = '';
     if (S.promo) {
-      $('paySub').textContent = 'Promozione EXPO2026: il corrispettivo è di 400 € (IVA inclusa), da pagare di persona.';
-      box.appendChild(card('div', 'card2 sel full', '<span>Promozione EXPO2026 · pagamento di persona</span><b>400 €</b><span>Importo totale, IVA inclusa. Il pagamento si effettua di persona.</span>'));
-      $('payNote').textContent = 'Con la promozione non è previsto il pagamento in due rate né online.';
+      $('paySub').textContent = (S.free ? 'Corrispettivo: € 0,00. Nessun pagamento dovuto.' : 'Promozione EXPO2026: il corrispettivo è di 400 € (IVA inclusa), da pagare di persona.');
+      box.appendChild(card('div', 'card2 sel full', '<span>' + (S.free ? 'Corrispettivo' : 'Promozione EXPO2026 · pagamento di persona') + '</span><b>' + (S.free ? '0,00 €' : '400 €') + '</b><span>' + (S.free ? '' : 'Importo totale, IVA inclusa. Il pagamento si effettua di persona.') + '</span>'));
+      $('payNote').textContent = (S.free ? 'Nessun pagamento dovuto.' : 'Con la promozione non è previsto il pagamento in due rate né online.');
       S.pending ? (S.pending.scelta = 'stand') : scegliPagamento('stand');
     } else {
       $('paySub').textContent = 'Scegli come pagare il corrispettivo di sviluppo (IVA inclusa). Online il pagamento avviene sul sito sicuro SumUp; puoi anche pagare di persona.';
@@ -320,7 +320,7 @@
       var campi = [
         ['form-name', 'iscrizione-aste-firma'], ['bot-field', ''], ['client_id', uuid()],
         ['nome', d.nome], ['email', d.email], ['cell', d.cell], ['cf', d.cf],
-        ['importo', d.importo + ' + IVA'], ['coupon', S.coupon], ['metodo_firma', metodo], ['data_ora', ts], ['ip', ip],
+        ['importo', S.free ? '0,00' : d.importo + ' + IVA'], ['coupon', S.coupon], ['metodo_firma', metodo], ['data_ora', ts], ['ip', ip],
         ['impronta', hash],
         ['consensi', 'marketing: ' + c.marketing + ' | partner: ' + c.partner + ' | terzi: ' + c.terzi]
       ];
