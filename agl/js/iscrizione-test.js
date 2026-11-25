@@ -107,7 +107,7 @@
     } catch (e) { /* senza linea: decide il server all'invio */ }
     if (ok === null) { ok = (c === 'EXPO2026'); S.free = false; }
     S.coupon = c; S.promo = ok; if (!ok) S.free = false;
-    msg.textContent = ok ? 'Codice valido: corrispettivo scontato a 400 € (IVA inclusa), da pagare di persona.' : 'Codice non valido: si applica il prezzo di listino.';
+    msg.textContent = ok ? (S.free ? 'Codice valido.' : 'Codice valido: corrispettivo scontato a 400 € (IVA inclusa), da pagare di persona.') : 'Codice non valido: si applica il prezzo di listino.';
     msg.style.color = ok ? '#1e5a31' : '#b3261e';
   }
   function aggiornaImporto() {
@@ -258,7 +258,7 @@
     var box = $('payBox'); box.innerHTML = '';
     if (S.promo) {
       $('paySub').textContent = (S.free ? 'Corrispettivo: € 0,00. Nessun pagamento dovuto.' : 'Promozione EXPO2026: il corrispettivo è di 400 € (IVA inclusa), da pagare di persona.');
-      box.appendChild(card('div', 'card2 sel full', '<span>' + (S.free ? 'Corrispettivo' : 'Promozione EXPO2026 · pagamento di persona') + '</span><b>' + (S.free ? '0,00 €' : '400 €') + '</b><span>Importo totale, IVA inclusa. Il pagamento si effettua di persona.</span>'));
+      box.appendChild(card('div', 'card2 sel full', '<span>' + (S.free ? 'Corrispettivo' : 'Promozione EXPO2026 · pagamento di persona') + '</span><b>' + (S.free ? '0,00 €' : '400 €') + '</b><span>' + (S.free ? '' : 'Importo totale, IVA inclusa. Il pagamento si effettua di persona.') + '</span>'));
       $('payNote').textContent = (S.free ? 'Nessun pagamento dovuto.' : 'Con la promozione non è previsto il pagamento in due rate né online.');
       S.pending ? (S.pending.scelta = 'stand') : scegliPagamento('stand');
     } else {
