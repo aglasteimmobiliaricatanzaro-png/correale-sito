@@ -118,7 +118,7 @@
       ['Firmatario (Cliente)', d.nome], ['Codice fiscale', d.cf], ['Email', d.email], ['Cellulare', d.cell],
       ['Data e ora della firma', au.ts || ''], ['Indirizzo IP', au.ip || 'non disponibile'],
       ['Metodo di firma', au.metodo || ''], ['Dispositivo / browser', au.ua || ''],
-      ['Corrispettivo', (d.importo ? 'Euro ' + d.importo + ' + IVA' : '')],
+      ['Corrispettivo', (d.importo ? 'Euro ' + d.importo + (d.importo === '0,00' ? '' : ' + IVA') : '')],
       ['Consenso marketing', C.marketing === 'si' ? 'presto il consenso' : 'non presto il consenso'],
       ['Cessione dati ai Partner', C.partner === 'si' ? 'presto il consenso' : 'non presto il consenso'],
       ['Marketing di terzi', C.terzi === 'si' ? 'presto il consenso' : 'non presto il consenso'],
