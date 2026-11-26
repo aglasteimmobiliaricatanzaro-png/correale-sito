@@ -83,8 +83,12 @@
     lines.slice(0, 3).forEach(function (l, i) { page.drawText(l, { x: 21, y: 267.8 - i * 6.25, size: geoSize, font: geoFont, color: ink }); });
 
     txt(d.budget, 80, 229.4, 116, 8); txt(d.liquidita, 48, 220.6, 148, 8);
-    if (d.mutuo === 'si') cross(172, 195, 180, 203);
-    if (d.mutuo === 'no') cross(186, 194, 195, 203);
+    /* il modello non ha le caselle SI/NO: le disegniamo noi, cosi' la croce e' chiara */
+    function box(x0, y0, x1, y1) { page.drawRectangle({ x: x0, y: y0, width: x1 - x0, height: y1 - y0, borderColor: ink, borderWidth: 0.7 }); }
+    txt('SI', 171.5, 197, 8, 7, FB); box(179.5, 195.5, 186.5, 202.5);
+    txt('NO', 189.5, 197, 9, 7, FB); box(200, 195.5, 207, 202.5);
+    if (d.mutuo === 'si') cross(179.5, 195.5, 186.5, 202.5);
+    if (d.mutuo === 'no') cross(200, 195.5, 207, 202.5);
     txt(d.importo, 44, 167.3, 50, 6.4, FB);
     txt((d.luogo || '') + (d.data ? ', ' + d.data : ''), 55, 138.6, 154, 8);
 
@@ -114,7 +118,7 @@
       ['Firmatario (Cliente)', d.nome], ['Codice fiscale', d.cf], ['Email', d.email], ['Cellulare', d.cell],
       ['Data e ora della firma', au.ts || ''], ['Indirizzo IP', au.ip || 'non disponibile'],
       ['Metodo di firma', au.metodo || ''], ['Dispositivo / browser', au.ua || ''],
-      ['Corrispettivo', (d.importo ? 'Euro ' + d.importo + ' + IVA' : '')],
+      ['Corrispettivo', (d.importo ? 'Euro ' + d.importo + (d.importo === '0,00' ? '' : ' + IVA') : '')],
       ['Consenso marketing', C.marketing === 'si' ? 'presto il consenso' : 'non presto il consenso'],
       ['Cessione dati ai Partner', C.partner === 'si' ? 'presto il consenso' : 'non presto il consenso'],
       ['Marketing di terzi', C.terzi === 'si' ? 'presto il consenso' : 'non presto il consenso'],
