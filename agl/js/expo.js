@@ -62,7 +62,7 @@
     var n = d.cell.replace(/\D/g, '').replace(/^00/, '');
     if (!/^39/.test(n) || n.length < 11) n = '39' + n.replace(/^0+/, '');
     var txt = 'Buongiorno ' + d.nome + ', grazie per essere passato allo stand AGL Aste Immobiliari Catanzaro a EdilEXPO. '
-      + 'Qui trovi la presentazione del servizio: https://correale.eu/presentazione-aste.html . Per qualsiasi domanda siamo a disposizione.';
+      + 'Qui trovi la presentazione del servizio: https://correale.eu/presentazione-aste.html . Seguici su Instagram: https://www.instagram.com/agl_catanzaro_lamezia/ . Per qualsiasi domanda siamo a disposizione.';
     return 'https://wa.me/' + n + '?text=' + encodeURIComponent(txt);
   }
 
