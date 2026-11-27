@@ -98,7 +98,7 @@
   /* ---------- coupon ---------- */
   async function applicaCoupon() {
     var c = cap($('coupon').value).toUpperCase(), msg = $('cpMsg'); S.promo = false; S.coupon = '';
-    if (!c) { msg.textContent = ''; return; }
+    if (!c) { S.free = false; S.acc = 0; msg.textContent = ''; try { aggiornaImporto(); } catch (e) {} return; }
     var ok = null;
     try {
       var ctl = new AbortController(), t = setTimeout(function () { ctl.abort(); }, 4000);
