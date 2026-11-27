@@ -136,6 +136,7 @@
     y -= 10;
     var note = 'Il Cliente ha letto il contratto e l\'informativa privacy, ha inserito personalmente i propri dati e ha apposto la firma elettronica con le modalità indicate sopra, dichiarando di firmare il contratto. La firma è una firma elettronica semplice ai sensi del Regolamento (UE) 910/2014 (eIDAS). Una copia del documento firmato è conservata da Correale Consulting, P.IVA 04085810796, 88100 Catanzaro.';
     wrap(F, clean(F, note), 8.5, 495).forEach(function (l) { t2(l, 8.5, F, L.rgb(0.25, 0.25, 0.25)); });
+    if (d.importo !== '0,00') { y -= 8; t2('Precisazione sul corrispettivo:', 9, FB); var nota2 = d.acconto ? ('Il corrispettivo indicato è l\'importo totale dovuto dal Cliente (Euro 399,00 IVA inclusa). Alla sottoscrizione è dovuto un acconto di Euro ' + d.acconto + ',00 IVA inclusa; il saldo di Euro ' + (399 - d.acconto) + ',00 IVA inclusa è dovuto dopo la consegna della Scheda di Fattibilità. L\'indicazione dell\'importo in questo documento non attesta l\'avvenuto pagamento integrale.') : 'Il corrispettivo indicato è l\'importo totale dovuto dal Cliente e può essere corrisposto in più momenti (ad esempio, acconto alla sottoscrizione e saldo dopo la consegna della Scheda di Fattibilità). L\'indicazione dell\'importo in questo documento non attesta l\'avvenuto pagamento: l\'eventuale saldo non ancora versato resta dovuto alle scadenze concordate.'; wrap(F, clean(F, nota2), 8.5, 495).forEach(function (l) { t2(l, 8.5, F, L.rgb(0.25, 0.25, 0.25)); }); }
     return pdf.save();
   }
 
