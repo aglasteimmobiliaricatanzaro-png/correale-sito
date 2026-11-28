@@ -249,9 +249,31 @@
     if (!d.cell || $('waCli')) return;
     var n = String(d.cell).replace(/\D/g, '').replace(/^00/, '');
     if (!/^39/.test(n) || n.length < 11) n = '39' + n.replace(/^0+/, '');
-    var t = 'Buongiorno ' + (d.nome || '') + ', grazie per aver firmato il contratto con AGL Aste Immobiliari Catanzaro. Per qualsiasi domanda siamo a disposizione.';
-    var a = document.createElement('a'); a.id = 'waCli'; a.className = 'btn btn-agl-line'; a.target = '_blank'; a.rel = 'noopener';
-    a.style.marginLeft = '8px'; a.href = 'https://wa.me/' + n + '?text=' + encodeURIComponent(t); a.textContent = 'Invia WhatsApp al cliente';
+    var t = 'Buongiorno ' + (d.nome || '') + ', grazie per aver firmato il contratto con AGL Aste Immobiliari Catanzaro. In allegato trova il contratto firmato con il certificato di firma. Per qualsiasi domanda siamo a disposizione.';
+    var a = document.createElement('a'); a.id = 'waCli'; a.className = 'btn btn-agl-line'; a.href = '#';
+    a.style.marginLeft = '8px'; a.textContent = 'Invia WhatsApp al cliente (con contratto)';
+    var mobile = (navigator.userAgentData && navigator.userAgentData.mobile) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    a.addEventListener('click', async function (ev) {
+      ev.preventDefault();
+      var dl = $('dl'), fname = dl.download || 'contratto-firmato.pdf';
+      // telefono/tablet: condivisione con il PDF gia' allegato (contratto + certificato di firma)
+      if (mobile && navigator.share && navigator.canShare) {
+        try {
+          var blob = await fetch(dl.href).then(function (r) { return r.blob(); });
+          var file = new File([blob], fname, { type: 'application/pdf' });
+          if (navigator.canShare({ files: [file] })) {
+            try { await navigator.share({ files: [file], text: t }); } catch (e) { /* annullato */ }
+            return;
+          }
+        } catch (e) { /* passa al metodo alternativo */ }
+      }
+      // computer (o telefono senza condivisione file): scarica il PDF e apre la chat del cliente
+      dl.click();
+      window.open('https://wa.me/' + n + '?text=' + encodeURIComponent(t), '_blank', 'noopener');
+      var m = $('waNota');
+      if (!m) { m = document.createElement('p'); m.id = 'waNota'; m.style.marginTop = '8px'; m.style.fontSize = '14px'; row.parentNode.insertBefore(m, row.nextSibling); }
+      m.textContent = 'Il PDF (contratto + certificato) è stato scaricato: nella chat WhatsApp allegalo con la graffetta, oppure trascinalo nella chat, poi invia.';
+    });
     row.appendChild(a);
   }
   function renderPay() {
